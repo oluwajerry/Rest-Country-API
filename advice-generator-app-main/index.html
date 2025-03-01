@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  
+  <title>Advice generator app</title>
+
+  <style>
+    .attribution { font-size: 11px; text-align: center; }
+    .attribution a { color: hsl(228, 45%, 44%); }
+    main{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:100vh;
+    }
+    section{
+      background-color: dodgerblue;
+      width: 50%;
+      height: 12rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+
+      p,
+      div{
+        color: whitesmoke;
+        font-size: 18px;
+      }
+      #dice img{
+        cursor: pointer;
+      }
+    }
+  </style>
+</head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Figtree:ital,wght@0,300..900;1,300..900&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Manrope:wght@200..800&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik:ital,wght@0,300..900;1,300..900&family=Young+Serif&display=swap');
+
+  *{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  :root{
+  --NEON-GREEN:hsl(150, 100%, 66%);
+  --GRAYISH-BLUE: hsl(217, 19%, 38%);
+  --DARK-GRAYISH-BLUE: hsl(217, 19%, 24%);
+  --DARK_BLUE: hsl(218, 23%, 16%);
+  --LIGHT-CYAN:hsl(193, 38%, 86%);
+  --QUOTE-FS:28px;
+  }
+
+  img{
+    max-width: 100%;
+  }
+  body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--DARK_BLUE);
+    padding: 0 1rem;
+    font-family: "Manrope", serif;
+  }
+  section{
+    background-color: var(--DARK-GRAYISH-BLUE);
+    padding: 0.3rem;
+    height: 20rem;
+    width: 100%;
+    position: relative;
+    border-radius: 5px;
+
+  }
+  section p{
+    color: var(--NEON-GREEN);
+    text-align: center;
+    margin-bottom: 1rem;
+    letter-spacing: 3px;
+    font-size: 16px;
+  }
+  #advice{
+    color: var(--LIGHT-CYAN);
+    font-size: var(--QUOTE-FS);
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: bolder;
+  }
+  figure img{
+    text-align: center;
+  }
+  figure#pause{
+    padding: 1rem;
+  }
+  figure#dice{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: var(--NEON-GREEN);
+    display: grid;
+    place-content: center;
+    place-items: center;
+    position: absolute;
+    bottom: -10%;
+  }
+
+@media screen and (min-width:768px) {
+  section{
+    padding: 1rem;
+    width: 70%;
+  }
+}
+</style>
+<body>
+
+   <main>
+      <section>
+        <p>ADVICE #<span id="adviceID"></span></p>
+        <div id="advice">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+        <figure id="pause">
+          <img src="images/pattern-divider-desktop.svg" alt="divide" >
+        </figure>
+        <figure id="dice">
+          <img src="images/icon-dice.svg" alt="dice" >
+        </figure>
+      </section>
+   </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () =>{
+      const adviceID = document.querySelector('#adviceID')
+      const adviceText = document.querySelector('#advice')
+
+      const api = async () => {
+        try {
+          const apiFetch = await fetch('https:api.adviceslip.com/advice/search/try')
+          const response = await apiFetch.json()
+          
+          const slips = response.slips
+    
+          const dice = document.querySelector('#dice img')
+          dice.onclick = () =>{
+            const id = Math.floor(Math.random()* 20)
+
+            adviceText.innerHTML = `"${slips[id].advice}"`
+            adviceID.innerHTML = slips[id].id
+          }
+
+        } catch (error) {
+          console.error("There is an error fetching:" + error)
+        }
+      }
+      api()
+    })
+  </script>
+
+  <!-- <div class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
+    Coded by <a href="#">Sir Jerry</a>.
+  </div> -->
+</body>
+</html>
